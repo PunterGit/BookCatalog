@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Каталог книг{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.css') }}">
+            <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+        {% endblock %}
+    </head>
+    <body class="lockHover">
+    {% block body %}
+    <nav class="fixed-top navbar navbar-expand-lg navbar-light bg-light">
+            <ul class="navbar-nav h-100 justify-content-center align-items-center">
+                <li class="col-1"></li>
+                <li class="nav-item col-4">
+                    Название
+                </li>
+                <li class="nav-item col-2">
+                    Жанр
+                </li>
+                <li class="nav-item col-2">
+                    Автор
+                </li>
+                <li class="nav-item col-2">
+                    Год выпуска
+                </li>
+                <li class="col-1"></li>
+            </ul>
+    </nav>
+    <div class="content">
+    <form inputId="0">
+    <div class="row newBook" {% if Books|length == 0 %} style="display: flex"{% endif %}>
+        <div class="col-1">
+            <img src="{{ asset('assets/img/Cancel.png') }}" alt="Отменить создание" {% if Books|length == 0 %} style="display: none"{% endif %}>
+        </div>
+        <div class="col-4"><input class="form-control" type="text" maxlength="100" placeholder="Название книги"></div>
+        <div class="col-2">
+            <img src="{{ asset('assets/img/Minus.png') }}" alt="Удалить жанр" class="minIcons">
+            <input class="genreInput form-control" type="text" maxlength="100" placeholder="Жанр" name="">
+            <span class="add"><img src="{{ asset('assets/img/Add.png') }}" alt="Добавить" class="minIcons"> Добавить жанр</span>
+        </div>
+        <div class="col-2">
+            <img src="{{ asset('assets/img/Minus.png') }}" alt="Удалить автора" class="minIcons">
+            <input class="authorInput form-control" type="text" maxlength="100" placeholder="Автор" name="">
+            <span class="add"><img src="{{ asset('assets/img/Add.png') }}" alt="Добавить" class="minIcons"> Добавить автора</span>
+        </div>
+        <div class="col-2">
+            <input class="form-control" type="number" max="2019" min="1000" pattern="(^[1-2])(\d)" placeholder="2019">
+        </div>
+        <div class="col-1">
+            <img src="{{ asset('assets/img/Save.png') }}" alt="Сохранить новую" class="sideBtn">
+        </div>
+    </div>
+    </form>
+    {% for key,next_item in Books %}
+    <form>
+    <div class="row" id="{{ Ids[loop.index0] }}">
+        <div class="col-1">
+            <img src="{{ asset('assets/img/Cancel.png') }}" alt="Отменить">
+            <img src="{{ asset('assets/img/AddBook.png') }}" alt="Добавить книгу" class="sideBtn">
+            <img src="{{ asset('assets/img/RemoveBook.png') }}" alt="Удалить" class="sideBtn">
+        </div>{# надо добавить jqery код, нелзя было сохранять всех заполненых полей #}
+        <div class="col-4"><input class="form-control" type="text" maxlength="100" name="{{ key }}" value="{{ key }}"><p>{{ key }}</p></div>
+        <div class="col-2">
+            {% for n,num in next_item['Genres'] %}
+                <img src="{{ asset('assets/img/Minus.png') }}" alt="Удалить жанр" class="minIcons">
+                <input class="genreInput autocomplete form-control" name="{{ num }}" type="text" maxlength="100" value="{{ num }}"><p>{{ num }}</p>
+            {% endfor %}
+            <span class="add"><img src="{{ asset('assets/img/Add.png') }}" alt="Добавить" class="minIcons"> Добавить жанр</span>
+        </div>
+        <div class="col-2">
+            {% for n,num in next_item['Authors'] %}
+                <img src="{{ asset('assets/img/Minus.png') }}" alt="Удалить автора" class="minIcons">
+                <input class="authorInput autocomplete form-control" name="{{ num }}" type="text" maxlength="100" value="{{ num }}"><p>{{ num }}</p>
+            {% endfor %}
+            <span class="add"><img src="{{ asset('assets/img/Add.png') }}" alt="Добавить" class="minIcons"> Добавить автора</span>
+        </div>
+        <div class="col-2">
+            <input class="form-control" type="number" max="2019" min="1000" pattern="(^[1-2])(\d)" name="{{ next_item['PubDate'] }}" value="{{ next_item['PubDate'] }}" placeholder="2019"><p>{{ next_item['PubDate'] }}</p>
+        </div>
+        <div class="col-1">
+            <img src="{{ asset('assets/img/Edit.png') }}" alt="Изменить" class="sideBtn">
+            <img src="{{ asset('assets/img/Save.png') }}" alt="Сохранить" class="sideBtn" style="display: none;">
+        </div>
+    </div>
+    </form>
+    {% endfor %}
+
+    {% endblock %}
+    </div>
+    {% block javascripts %}
+        <script src="{{ asset('assets/js/jquery-3.4.1.min.js') }}"></script>
+        <script src="{{ asset('assets/bootstrap/js/bootstrap.js') }}"></script>
+        <script src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
+        <script src="{{ asset('assets/js/app.js') }}"></script>
+    {% endblock %}
+    <img id="loadImg" src="{{ asset('assets/img/loading.svg') }}" alt="Загрузка"/>
+    </body>
+</html>
