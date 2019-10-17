@@ -36,7 +36,7 @@ class DataController extends AbstractFOSRestController
         array_push($restresult,$genres);
         array_push($restresult,$authors);
         if (($restresult === null)) {
-            return new View("there are no Genres or Authors exist", Response::HTTP_NOT_FOUND);
+            return new View("Авторы и жанры не созданы", Response::HTTP_NOT_FOUND);
         }
         return new JsonResponse($restresult);
     }
@@ -47,7 +47,7 @@ class DataController extends AbstractFOSRestController
     {
         $restresult = $this->getDoctrine()->getRepository('App:Books')->findAll();
         if ($restresult === null) {
-            return new View("there are no books exist", Response::HTTP_NOT_FOUND);
+            return new View("Книги не созданы", Response::HTTP_NOT_FOUND);
         }
         return $restresult;
     }
@@ -55,7 +55,7 @@ class DataController extends AbstractFOSRestController
     /**
      * @Rest\Post("/book/")
      * @param Request $request
-     * @return Response
+     * @return View|Response
      */
     public function postAction(Request $request)
     {
@@ -70,7 +70,7 @@ class DataController extends AbstractFOSRestController
         $idAuthors = [];
         $idGenres = [];
         if(empty($title) || empty($genre) || empty($author) || empty($pubDate)) {
-            return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
+            return new View("Введены не все данные", Response::HTTP_NOT_ACCEPTABLE);
         }else {
             $em = $this->getDoctrine()->getManager();
             $books->setTitle($title); // добавление новой книги в таблицу books
@@ -139,7 +139,7 @@ class DataController extends AbstractFOSRestController
 
         if(empty($title) || empty($genre) || empty($author) || empty($pubDate) || empty($id))
         {
-            return new Response('Empty data', Response::HTTP_NOT_ACCEPTABLE);
+            return new Response('Введены не все данные', Response::HTTP_NOT_ACCEPTABLE);
         }else {
             $current_book = $this->getDoctrine()->getRepository('App:Books')->find($id);
             $currentAuthors = $this->getDoctrine()->getRepository('App:BookAuthors')->findBy(["id_book"=>$id]);
